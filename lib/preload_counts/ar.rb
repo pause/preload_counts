@@ -66,10 +66,11 @@ module PreloadCounts
         conditions += self.instance_eval(&r_scope).where_values
       end
 
+      foreign_key = self.reflect_on_association(association).foreign_key
       sql = <<-SQL
       (SELECT count(*)
        FROM #{association}
-       WHERE #{association}.#{table_name.singularize}_id = #{table_name}.id AND
+       WHERE #{association}.#{foreign_key} = #{table_name}.id AND
        #{conditions_to_sql conditions}) AS #{find_accessor_name(association, scope)}
       SQL
     end
